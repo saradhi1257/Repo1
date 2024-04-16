@@ -1,0 +1,45 @@
+name: Use Artifacts in Same Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-use-artifacts:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # Build your artifacts
+    - name: Build artifacts
+      run: |
+        # Example build commands
+        mkdir my-artifact
+        echo "Hello, world!" > my-artifact/file.txt
+
+    # Upload the artifacts
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: my-artifact   # Name of the artifact to upload
+        path: my-artifact   # Path to the directory containing the artifacts
+
+    # Download the artifacts
+    - name: Download artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: my-artifact   # Name of the artifact to download
+
+    # Access and use the artifacts
+    - name: List artifact contents
+      run: |
+        ls -R my-artifact   # Replace 'my-artifact' with the name of your artifact
+
+    # Use the artifact contents in subsequent steps
+    - name: Example step
+      run: |
+        # Example command using artifact contents
+        cat my-artifact/file.txt   # Replace 'my-artifact' and 'file.txt' with your actual artifact path
